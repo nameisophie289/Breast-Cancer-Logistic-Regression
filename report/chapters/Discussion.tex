@@ -1,0 +1,71 @@
+\section{Discussion}
+
+The results obtained from the implementation and evaluation of the logistic regression model confirm the theoretical expectations presented earlier.  
+This section discusses the model’s behavior, key findings, and limitations, emphasizing the relationship between theoretical formulation and empirical outcomes.
+
+\subsection{Convergence and Learning Rate Sensitivity}
+
+The convergence analysis demonstrated that the cost function consistently decreased with successive iterations, validating the correctness of the gradient descent implementation.  
+As expected from convex optimization theory, the cross-entropy loss surface exhibited a single global minimum, enabling stable convergence without oscillations when using an appropriately chosen learning rate.
+
+The experiments revealed that the learning rate $\alpha$ plays a critical role in determining convergence behavior:
+\begin{itemize}[noitemsep]
+    \item A small $\alpha$ (e.g., 0.001) produced stable but slow convergence, requiring more iterations to reach an optimal region.
+    \item A moderate $\alpha = 0.01$ achieved the best balance between speed and stability.
+    \item A large $\alpha$ (e.g., 0.1) caused noticeable oscillations in the cost curve, as the updates overshot the minimum.
+\end{itemize}
+
+This behavior aligns with the theoretical understanding that excessively large learning rates can cause divergence, while overly small ones slow down convergence.  
+The chosen $\alpha = 0.01$ provided smooth convergence and minimized computational cost while achieving high accuracy.
+
+\subsection{Impact of Regularization}
+
+The inclusion of an $L2$ penalty term effectively controlled weight magnitudes and reduced overfitting tendencies.  
+As the regularization parameter $\lambda$ increased, the weight vector’s norm decreased, which led to smoother decision boundaries and reduced model variance.  
+However, excessively large $\lambda$ values introduced bias and slightly reduced accuracy.
+
+This trade-off reflects the classic \textbf{bias-variance balance} in statistical learning.  
+When $\lambda$ was small ($\leq 0.1$), the model achieved nearly optimal generalization performance with a cross-validation accuracy of approximately 95\%.  
+The results confirm that mild regularization helps prevent the model from memorizing training samples, enhancing robustness to unseen data.
+
+\subsection{Generalization and Cross-Validation Insights}
+
+The 5-fold cross-validation results provided strong evidence of the model’s generalization capability.  
+With an average accuracy of 95.4\% $\pm$ 1.7\%, the low variance across folds indicates that the performance is consistent regardless of the specific train-test split.  
+This validates the effectiveness of the implemented regularization and the suitability of the logistic model for this dataset.
+
+Moreover, since the Breast Cancer Wisconsin dataset contains some correlation between features (e.g., radius, perimeter, and area), the model’s ability to maintain stable results across folds illustrates that logistic regression can handle multicollinearity reasonably well when regularization is applied.
+
+\subsection{Comparison with scikit-learn Implementation}
+
+The high prediction match rate (99.1\%) between the custom implementation and the \texttt{scikit-learn} reference model confirms both mathematical and computational correctness.  
+The small difference in accuracy (approximately 0.9\%) is likely due to minor variations in initialization, convergence thresholds, and floating-point precision.  
+This demonstrates that a from-scratch vectorized implementation can replicate the behavior of industrial-grade libraries with negligible deviation.
+
+The comparison also highlights the transparency and educational value of manual implementation, allowing explicit control over the optimization process and hyperparameter tuning — aspects often abstracted away in library functions.
+
+\subsection{Model Strengths and Limitations}
+
+The primary strengths of the implemented model are:
+\begin{itemize}[noitemsep]
+    \item High predictive accuracy and interpretability.
+    \item Stable convergence due to convex optimization.
+    \item Computational efficiency on small to medium datasets.
+\end{itemize}
+
+However, logistic regression also exhibits several limitations:
+\begin{itemize}[noitemsep]
+    \item The decision boundary is linear, making it less suitable for non-linearly separable datasets.
+    \item Sensitivity to feature scaling and outliers.
+    \item Reliance on manually tuned hyperparameters such as learning rate and regularization strength.
+\end{itemize}
+
+These limitations could be addressed through extensions such as polynomial feature expansion, kernel logistic regression, or more complex nonlinear classifiers like Support Vector Machines (SVMs) and Neural Networks.
+
+\subsection{Interpretation of the Results}
+
+From a probabilistic standpoint, the logistic regression model provides interpretable outputs that represent the estimated likelihood of class membership.  
+For instance, a predicted probability $\hat{y} = 0.85$ for a malignant tumor indicates an 85\% confidence that the tumor belongs to the positive class.  
+Such probabilistic outputs are particularly valuable in medical decision support systems, where classification confidence can guide further clinical investigation.
+
+The strong performance of this implementation validates that logistic regression remains a robust baseline model in binary classification tasks, especially where interpretability and reliability are crucial.

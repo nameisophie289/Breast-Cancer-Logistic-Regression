@@ -1,0 +1,83 @@
+\section{Theoretical Background}
+
+Logistic Regression is one of the foundational algorithms in statistical learning theory, designed to model the probability of a binary outcome as a function of a set of input features. Although its name suggests a regression model, it is fundamentally a \textbf{classification algorithm} that maps real-valued feature vectors to discrete labels $\{0, 1\}$. The model assumes a linear relationship between the independent variables and the log-odds of the dependent variable, which allows it to serve as a \textit{probabilistic linear classifier}.
+
+\subsection{Sigmoid Function}
+
+At the core of logistic regression lies the \textbf{logistic sigmoid function}, which transforms any real-valued input $z$ into a probability value between 0 and 1. The function is defined as:
+\begin{equation}
+    \sigma(z) = \frac{1}{1 + e^{-z}}
+\end{equation}
+
+Here, $z$ represents a linear combination of the input features:
+\begin{equation}
+    z = w^T x + b
+\end{equation}
+where $w = (w_1, w_2, \dots, w_n)$ is the weight vector, $b$ is the bias term, and $x = (x_1, x_2, \dots, x_n)$ is the feature vector.
+
+The output $\hat{y} = \sigma(w^T x + b)$ can be interpreted as the estimated probability that the instance belongs to class 1:
+\begin{equation}
+    P(y = 1 | x; w, b) = \hat{y}
+\end{equation}
+
+\subsection{Decision Boundary}
+
+The decision rule for classification is obtained by setting a threshold, typically 0.5:
+\begin{equation}
+    \hat{y} =
+    \begin{cases}
+        1, & \text{if } \sigma(w^T x + b) \geq 0.5 \\
+        0, & \text{otherwise}
+    \end{cases}
+\end{equation}
+Since $\sigma(z) = 0.5$ when $z = 0$, the decision boundary corresponds to the hyperplane defined by $w^T x + b = 0$. This boundary separates the two classes linearly in the feature space.
+
+\subsection{Model Derivation from Maximum Likelihood Estimation}
+
+The parameters $(w, b)$ are learned by maximizing the likelihood of the observed data under the model’s probabilistic assumptions. For a dataset $\{(x^{(i)}, y^{(i)})\}_{i=1}^m$ with independent samples, the likelihood function is:
+\begin{equation}
+    L(w, b) = \prod_{i=1}^{m} P(y^{(i)} | x^{(i)}; w, b)
+\end{equation}
+
+Using the Bernoulli distribution, this can be expressed as:
+\begin{equation}
+    L(w, b) = \prod_{i=1}^{m} \left[\hat{y}^{(i)}\right]^{y^{(i)}} \left[1 - \hat{y}^{(i)}\right]^{(1 - y^{(i)})}
+\end{equation}
+
+To simplify optimization, we take the natural logarithm to obtain the log-likelihood:
+\begin{equation}
+    \ell(w, b) = \sum_{i=1}^{m} \left[ y^{(i)} \log \hat{y}^{(i)} + (1 - y^{(i)}) \log(1 - \hat{y}^{(i)}) \right]
+\end{equation}
+
+The goal is to find the parameters $(w, b)$ that maximize $\ell(w, b)$, or equivalently minimize the \textbf{negative log-likelihood loss} (also called cross-entropy loss):
+\begin{equation}
+    J(w, b) = -\frac{1}{m}\sum_{i=1}^{m} \left[ y^{(i)} \log \hat{y}^{(i)} + (1 - y^{(i)}) \log(1 - \hat{y}^{(i)}) \right]
+\end{equation}
+
+\subsection{Gradient Descent Optimization}
+
+Because $J(w, b)$ is convex with respect to $w$ and $b$, it can be minimized efficiently using the \textbf{gradient descent} algorithm. The gradients of the loss function with respect to the model parameters are derived as:
+\begin{align}
+    \frac{\partial J}{\partial w} &= \frac{1}{m} X^T (\hat{y} - y) \\
+    \frac{\partial J}{\partial b} &= \frac{1}{m} \sum_{i=1}^{m} (\hat{y}^{(i)} - y^{(i)})
+\end{align}
+
+At each iteration, the parameters are updated according to:
+\begin{align}
+    w &:= w - \alpha \frac{\partial J}{\partial w} \\
+    b &:= b - \alpha \frac{\partial J}{\partial b}
+\end{align}
+where $\alpha$ is the learning rate controlling the step size.
+
+\subsection{Regularization}
+
+To prevent overfitting and improve generalization, a regularization term is added to the cost function. The most common form is the $L2$ (Ridge) regularization, which penalizes large weight magnitudes:
+\begin{equation}
+    J_{reg}(w, b) = J(w, b) + \frac{\lambda}{2m} \|w\|^2
+\end{equation}
+
+Here, $\lambda$ is the \textbf{regularization parameter} that controls the strength of the penalty. A higher $\lambda$ reduces overfitting but may cause underfitting if set too large.
+
+\subsection{Model Evaluation}
+
+Once trained, the model is evaluated using standard classification metrics such as accuracy, precision, recall, F1-score, and the area under the ROC curve (AUC). Cross-validation, particularly \textbf{5-fold cross-validation}, is employed to estimate generalization performance and mitigate bias introduced by a single train-test split.

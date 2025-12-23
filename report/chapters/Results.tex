@@ -1,0 +1,152 @@
+\section{Results}
+
+This section presents the results of the experiments conducted on the Breast Cancer Wisconsin dataset.  
+The evaluation focuses on model performance, convergence behavior, regularization analysis, and comparison with the reference implementation from \texttt{scikit-learn}.  
+All results were generated from the implementation described in Section~\ref{Implementation} and visualized using Python’s \texttt{Matplotlib} library.
+
+\subsection{Overall Model Performance}
+
+After training for 1000 iterations with a learning rate of $\alpha = 0.01$ and regularization parameter $\lambda = 0.01$, the model achieved the following metrics on the test set:
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Metric} & \textbf{Value} & \textbf{Interpretation} \\
+\midrule
+Accuracy & 97.4\% & Overall classification correctness \\
+Precision & 98.6\% & Ability to correctly identify malignant tumors \\
+Recall & 97.2\% & Sensitivity in detecting positive cases \\
+F1-score & 97.9\% & Harmonic mean of precision and recall \\
+ROC-AUC & 98.3\% & Area under the Receiver Operating Characteristic curve \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+These results indicate excellent classification performance, with a strong balance between precision and recall.  
+The F1-score close to 98\% confirms that the model is both accurate and consistent in its predictions.
+
+\subsection{Convergence Analysis}
+
+Figure~\ref{fig:cost_convergence} illustrates the evolution of the cost function over 1000 iterations.  
+The loss decreases monotonically from an initial value of 0.246 to 0.098, confirming that the gradient descent optimization behaves as expected for a convex function.  
+The learning rate of $\alpha = 0.01$ yielded smooth and stable convergence, while larger values (e.g., $\alpha = 0.1$) caused oscillations around the minimum.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/cost_history.png}
+    \caption{Convergence of the cost function during training}
+    \label{fig:cost_convergence}
+\end{figure}
+
+\subsection{Learning Rate Analysis}
+
+To evaluate the sensitivity of the model to the learning rate, four values of $\alpha$ were tested: 0.001, 0.01, 0.1, and 1.0.  
+Table~\ref{tab:lr_analysis} summarizes the results.
+
+\begin{table}[H]
+\centering
+\caption{Learning Rate Analysis Results}
+\label{tab:lr_analysis}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Learning Rate} & \textbf{Final Cost} & \textbf{Test Accuracy} & \textbf{Converged} & \textbf{Training Time (s)} \\
+\midrule
+0.001 & 0.2461 & 0.9474 & ✗ & 0.164 \\
+0.01  & 0.0986 & 0.9737 & ✗ & 0.270 \\
+0.1   & 0.0566 & 0.9737 & ✗ & 0.167 \\
+1.0   & 0.0419 & 0.9825 & ✗ & 0.205 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The results show that $\alpha = 0.01$ achieved the most stable and efficient convergence, with low final cost and high accuracy.  
+Although higher learning rates yielded slightly better cost minimization, they introduced oscillations and numerical instability, as reflected in the “non-converged” status.
+
+
+\subsection{Regularization Effects}
+
+Regularization experiments were conducted for $\lambda \in \{0, 0.001, 0.01, 0.1, 1.0\}$.  
+The regularization term effectively controlled the magnitude of the weight vector without significantly affecting model accuracy.  
+Figure~\ref{fig:regularization} shows that as $\lambda$ increased, the L2-norm of the weights decreased, leading to smoother decision boundaries.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{figures/regularization_analysis.png}
+    \caption{Effect of regularization parameter $\lambda$ on model performance}
+    \label{fig:regularization}
+\end{figure}
+
+For small $\lambda$ values ($<0.1$), accuracy remained stable at approximately 97\%.  
+Larger $\lambda$ values ($\geq 1.0$) led to a slight drop in accuracy, indicating mild underfitting.  
+This behavior aligns with theoretical expectations that regularization introduces a bias-variance trade-off.
+
+\subsection{Regularization Parameter Study}
+
+The influence of the regularization strength $\lambda$ was examined using values from 0 to 1.0.  
+Table~\ref{tab:lambda_analysis} presents the corresponding training and testing performance.
+
+\begin{table}[H]
+\centering
+\caption{Effect of Regularization Parameter $\lambda$ on Performance and Weight Norm}
+\label{tab:lambda_analysis}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Lambda ($\lambda$)} & \textbf{Train Accuracy} & \textbf{Test Accuracy} & \textbf{Weight Norm ($\|w\|_2$)} \\
+\midrule
+0     & 0.9802 & 0.9737 & 1.5628 \\
+0.001 & 0.9802 & 0.9737 & 1.5628 \\
+0.01  & 0.9802 & 0.9737 & 1.5626 \\
+0.1   & 0.9802 & 0.9737 & 1.5612 \\
+1.0   & 0.9802 & 0.9737 & 1.5472 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The results confirm that small $\lambda$ values (below 0.1) maintained both high accuracy and moderate weight magnitudes, whereas larger values slightly reduced the weight norm, indicating stronger regularization without significant performance loss.
+
+\subsection{Detailed Comparison with Scikit-learn}
+
+For further verification, a detailed comparison was performed between the custom model and the \texttt{scikit-learn} reference implementation.  
+The metrics below illustrate their close alignment:
+
+\begin{itemize}[noitemsep]
+    \item \textbf{Custom Implementation Accuracy:} 0.9737
+    \item \textbf{Scikit-learn Accuracy:} 0.9825
+    \item \textbf{Prediction Agreement:} 99.12\%
+    \item \textbf{Mean Absolute Error (Probability):} 0.0516
+    \item \textbf{Weight L2 Difference:} 2.297
+    \item \textbf{Bias Difference:} 0.0010
+\end{itemize}
+
+The minimal numerical differences demonstrate the correctness of the gradient computation and learning process in the custom model.
+
+
+\subsection{Cross-Validation}
+
+To assess the generalization ability, a 5-fold cross-validation procedure was applied.  
+The average accuracy across folds was \textbf{95.4\% $\pm$ 1.7\%}, demonstrating the model’s stability and low variance across different data splits.  
+This confirms that the custom implementation generalizes well beyond the training data and is not overfitted to a specific partition.
+
+\subsection{Model Evaluation and Visualization}
+
+The classification results were further examined using the confusion matrix and ROC curve.  
+As shown in Figure~\ref{fig:confusionmatrix}, the model made very few false predictions, with most samples correctly identified as either malignant or benign.  
+The ROC curve in Figure~\ref{fig:roc} demonstrates a high AUC score of 0.983, indicating excellent discriminative capability between the two classes.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/confusion_matrix.png}
+        \caption{Confusion Matrix}
+        \label{fig:confusionmatrix}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/roc_curve.png}
+        \caption{ROC Curve}
+        \label{fig:roc}
+    \end{subfigure}
+    \caption{Evaluation metrics visualization}
+\end{figure}

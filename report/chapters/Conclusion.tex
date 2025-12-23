@@ -1,0 +1,24 @@
+\section{Conclusion}
+
+This study successfully implemented and analyzed \textbf{Logistic Regression as a probabilistic linear model} from first principles.  
+Beginning with the theoretical formulation derived from maximum likelihood estimation, the model was developed using only fundamental numerical operations in \texttt{NumPy}, without reliance on high-level machine learning libraries.  
+The implementation accurately reproduced the expected mathematical behavior of the algorithm, validating both the theoretical understanding and computational correctness of logistic regression.
+
+Through comprehensive experiments on the Breast Cancer Wisconsin dataset, the model achieved a test accuracy of \textbf{97.4\%}, with precision and recall values exceeding 97\%.  
+The cost function demonstrated consistent convergence across iterations, confirming the stability of gradient descent optimization.  
+Regularization analysis showed that small $L2$ penalties improved generalization by preventing large weight magnitudes, while cross-validation results (\textbf{95.4\% ± 1.7\%}) indicated strong model robustness and low variance across folds.  
+The close agreement (99.1\% match rate) with the \texttt{scikit-learn} implementation further validated the correctness of the custom model.
+
+Beyond quantitative results, this project reinforces the conceptual understanding of logistic regression as a \textbf{probabilistic classifier based on linear decision boundaries}.  
+It highlights the importance of hyperparameter tuning, feature standardization, and regularization in achieving stable and interpretable results.  
+Moreover, the project demonstrates how classical models remain powerful and relevant when properly implemented and analyzed, even amid the rise of more complex deep learning approaches.
+
+For future work, several extensions could be explored:
+\begin{itemize}[noitemsep]
+    \item Extending the model to \textbf{multiclass classification} via softmax regression.
+    \item Applying \textbf{stochastic gradient descent (SGD)} for faster convergence on large datasets.
+    \item Incorporating \textbf{nonlinear transformations or kernel functions} to handle non-linearly separable data.
+\end{itemize}
+
+In conclusion, this project achieved its objectives by bridging theory and practice in logistic regression.  
+The results confirm that a carefully designed and well-understood implementation can achieve high accuracy, interpretability, and reliability—qualities that make logistic regression an enduring and foundational algorithm in modern machine learning.

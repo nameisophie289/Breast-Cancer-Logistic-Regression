@@ -1,0 +1,78 @@
+\documentclass[12pt,a4paper]{article}
+
+% ------------------------------------------------------------
+% BASIC PACKAGES AND SETTINGS
+% ------------------------------------------------------------
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+% Page layout
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+% Math packages
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\newcommand{\mc}[1]{\mathcal{#1}}
+\newcommand{\szo}{\{0,1\}}
+
+% Graphics & tables
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+
+% Misc utilities
+\usepackage{sparklines}
+\usepackage{enumitem}
+\usepackage{xcolor}
+
+% Hyperlinks
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+% ------------------------------------------------------------
+% TITLE INFORMATION
+% ------------------------------------------------------------
+\title{\textbf{Study of Logistic Regression as a Probabilistic Linear Model}}
+
+\author{
+    \textbf{Sophie Lam} \\[4pt]
+    \textbf{Student Number:} 24618528 \\[4pt]
+    \parbox{0.8\textwidth}{\centering
+        \textbf{Course:} 32513/31005 \\
+        \textit{Advanced Data Analytics Algorithms, Machine Learning}
+    } \\[6pt]
+    School of Computer Science, University of Technology Sydney \\[8pt]
+    \href{https://colab.research.google.com/drive/1qTykFad24ltRNzhD_ntcYCvOQOqHD3n6?usp=sharing}{\textbf{Google Colab Notebook}}
+}
+\date{\today}
+
+
+% ------------------------------------------------------------
+% DOCUMENT CONTENT
+% ------------------------------------------------------------
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\begin{abstract}
+This report presents a study and implementation of Logistic Regression as a probabilistic linear model for binary classification. The model is derived from maximum likelihood estimation and optimized using gradient descent. Experiments on the Breast Cancer Wisconsin dataset demonstrate high accuracy and strong generalization performance, validating both the theoretical foundation and practical implementation of the algorithm.
+\end{abstract}
+
+\tableofcontents
+
+\input{chapters/Introduction}
+\input{chapters/TheoreticalBackground}
+\input{chapters/Implementation}
+\input{chapters/Results}
+\input{chapters/Discussion}
+\input{chapters/Conclusion}
+
+
+\end{document}

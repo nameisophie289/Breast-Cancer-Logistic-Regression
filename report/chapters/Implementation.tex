@@ -1,0 +1,98 @@
+\section{Implementation}
+
+This section presents the practical implementation of Logistic Regression as a probabilistic linear model.  
+The objective was to translate the mathematical formulation described in Section~\ref{TheoreticalBackground} into a working Python program implemented entirely from first principles, without relying on pre-built machine learning libraries for model training.  
+All code was developed and executed in \textbf{Google Colab}, using Python~3.10 and \texttt{NumPy} as the primary numerical library.
+
+\subsection{Development Environment}
+
+The implementation was carried out in an interactive Google Colab environment, which provides access to Python packages and GPU acceleration when required.  
+Key libraries used include:
+\begin{itemize}[noitemsep]
+    \item \textbf{NumPy} – vectorized numerical computation and matrix operations.
+    \item \textbf{Matplotlib / Seaborn} – for visualization of loss convergence, ROC curves, and confusion matrices.
+    \item \textbf{scikit-learn (for benchmarking only)} – used to compare results with the built-in \texttt{LogisticRegression} class.
+\end{itemize}
+
+The source code is available in the following repository and notebook:
+\begin{center}
+\href{https://colab.research.google.com/drive/1qTykFad24ltRNzhD_ntcYCvOQOqHD3n6?usp=sharing}{\texttt{https://colab.research.google.com/drive/1qTykFad24ltRNzhD_ntcYCvOQOqHD3n6?usp=sharing}}
+\end{center}
+
+\subsection{Dataset Description}
+
+The model was trained and tested on the \textbf{Breast Cancer Wisconsin (Diagnostic)} dataset obtained from the \texttt{scikit-learn} datasets module.  
+It contains 569 observations with 30 continuous input features derived from digitized images of fine-needle aspirates of breast masses.  
+The target variable is binary:
+\[
+y =
+\begin{cases}
+1, & \text{if tumor is malignant} \\
+0, & \text{if tumor is benign}
+\end{cases}
+\]
+The features were standardized using \texttt{StandardScaler} to have zero mean and unit variance:
+\[
+x' = \frac{x - \mu}{\sigma}
+\]
+This normalization step ensures faster and more stable convergence of gradient descent.
+
+\subsection{Model Implementation}
+
+The logistic regression model was implemented entirely from scratch following the theoretical formulation.  
+The core components are summarized below.
+
+\paragraph{Hypothesis Function.}  
+The model predicts the probability of a positive class using the sigmoid activation:
+\[
+\hat{y} = \sigma(w^T x + b) = \frac{1}{1 + e^{-(w^T x + b)}}
+\]
+
+\paragraph{Loss Function.}  
+The optimization objective is the cross-entropy loss:
+\[
+J(w, b) = -\frac{1}{m} \sum_{i=1}^{m} \Big[y^{(i)} \log(\hat{y}^{(i)}) + (1 - y^{(i)}) \log(1 - \hat{y}^{(i)})\Big]
+\]
+
+\paragraph{Gradient Descent.}  
+Model parameters are iteratively updated using the following update rules:
+\begin{align}
+w &:= w - \alpha \frac{1}{m} X^T (\hat{y} - y) \\
+b &:= b - \alpha \frac{1}{m} \sum_{i=1}^{m} (\hat{y}^{(i)} - y^{(i)})
+\end{align}
+where $\alpha$ denotes the learning rate.
+
+The implementation used a maximum of 1000 iterations with early-stopping criteria based on the change in cost between iterations.
+
+\subsection{Regularization}
+
+To mitigate overfitting, an optional $L2$ regularization term was included in the loss function:
+\[
+J_{reg}(w, b) = J(w, b) + \frac{\lambda}{2m} \|w\|^2
+\]
+Different values of the regularization strength $\lambda$ were evaluated (\(0, 0.001, 0.01, 0.1, 1.0\)) to analyze its effect on both the magnitude of weights and model accuracy.  
+The results showed that small values of $\lambda$ improved generalization without degrading accuracy, while overly large values caused slight underfitting.
+
+\subsection{Training Procedure}
+
+The dataset was split into \textbf{80\% training} and \textbf{20\% testing} subsets using stratified sampling to preserve class balance.  
+The training process involved:
+\begin{enumerate}[noitemsep]
+    \item Initializing weights $w$ and bias $b$ to zero.
+    \item Performing forward propagation to compute predictions $\hat{y}$.
+    \item Computing the cost function $J(w, b)$.
+    \item Back-propagating the gradients and updating parameters.
+    \item Repeating for each iteration until convergence or maximum iteration limit.
+\end{enumerate}
+
+Learning rate experiments were performed with $\alpha \in \{0.001, 0.01, 0.05, 0.1\}$.  
+The best convergence and stability were achieved with $\alpha = 0.01$, where the cost decreased smoothly from 0.246 to 0.098 across 1000 iterations.
+
+\subsection{Model Evaluation}
+
+After training, the model was evaluated on the test set using accuracy, precision, recall, F1-score, and ROC-AUC.  
+In addition, a \textbf{5-fold cross-validation} procedure was conducted to assess the model’s generalization ability across different train/test partitions.  
+The cross-validation achieved an average accuracy of \textbf{95.4\% $\pm$ 1.7\%}, confirming the model’s stability.
+
+The confusion matrix, cost convergence plot, and ROC curve were generated to visualize performance.  
+Finally, the implementation was benchmarked against the \texttt{scikit-learn} Logistic Regression model, achieving near-identical results (prediction match rate of 99.1\%), validating the correctness of the custom implementation.
